@@ -1,0 +1,10 @@
+master:
+  adminUser: admin
+  adminPassword: admin_0000
+  jenkinsUriPrefix: "/jenkins"
+  serviceType: ClusterIP
+persistence:
+  enabled: true
+  existingClaim: jenkins-master-claim
+rbac:
+  create: true

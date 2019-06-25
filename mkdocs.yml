@@ -1,0 +1,13 @@
+site_name: Guide for Managing Kubernetes Clusters with IBM Multicloud Manager
+nav:
+  - Home: index.md
+  - Scenarios for Multi-cluster Management: mcm-multicloud-scenarios.md
+  - Quick Start: mcm-quickstart.md
+  - Create and Deploy Applications with MCM: mcm-applications.md
+  - DevOps in Multi-cluster Environment: mcm-devops.md
+  - Create Multi-cluster Compliance Policies: mcm-compliance.md
+  - Monitoring and Event Management with MCM: mcm-monitoring-event-management.md
+  - Manage Red Hat OpenShift Clusters: mcm-openshift.md
+  - Manage AWS EKS Clusters: mcm-eks.md
+theme: readthedocs
+extra_css: ["extra.css"]
