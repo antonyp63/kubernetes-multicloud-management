@@ -4,7 +4,7 @@ metadata:
   name: guestbook
 spec:
   repositories:
-  - name: 'gcr.io/google_samples/gb-redisslave'
+  - name: 'gcr.io/google-samples/gb-redisslave'
     policy:
       va:
         enabled: false
