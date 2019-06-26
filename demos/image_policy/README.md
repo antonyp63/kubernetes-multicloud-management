@@ -1,64 +1,33 @@
 # MCM Image Policy
 
+kubectl get clusterimagepolicy
+kubectl describe clusterimagepolicy guestbook
+kubectl delete clusterimagepolicy mcm-image-policy
+kubectl delete clusterimagepolicy guestbook
 
-
-```
+```yaml
+cat <<EOF | kubectl apply -f -
 apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
 kind: ClusterImagePolicy
 metadata:
   name: mcm-image-policy
-  spec:
-    repositories:
-      name: gcr.io/kubernetes-e2e-test-images/*
-      policy:
-        va:
-          enabled: false
-events:
-```
-```yaml
-apiVersion: compliance.mcm.ibm.com/v1alpha1
-kind: Compliance
-metadata:
-  name: image-compliance-rules
-  namespace: kube-system
-  description: "apply image compliance"
 spec:
-  runtime-rules:
-  - apiVersion: policy.mcm.ibm.com/v1alpha1
-    kind: Policy
-    metadata:
-      name: policy-image
-    spec:
-      remediationAction: inform # inform or enforce
-      complianceType: musthave
-    object-templates:
-    - complianceType: musthave
-      objectDefinition:
-        apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
-        kind: ClusterImagePolicy
-        namespace: {}
-        metadata:
-          name: mcm-image-policy
-          spec:
-          repositories:
-            name: gcr.io/kubernetes-e2e-test-images/*
-            policy:
-              va:
-                enabled: false
-
-
+  repositories:
+  - name: 'gcr.io/google-samples/*'
+    policy:
+      va:
+        enabled: false
+EOF
 ```
 
 
 
-
-
-```
+```yaml
 cat <<EOF | kubectl apply -f -
 apiVersion: mcm.ibm.com/v1alpha1
 kind: PlacementPolicy
 metadata:
-  name: image-placement-policy # name of placement policy
+  name: mcm-image-placement-policy # name of placement policy
 spec:
   clusterLabels:
     matchLabels:
@@ -69,15 +38,143 @@ kind: PlacementBinding
 metadata:
   name: image-binding
 placementRef:
-  name: image-placement-policy # refer to the placement policy name
+  name: mcm-image-placement-policy # refer to the placement policy name
   apiGroup: mcm.ibm.com
   kind: PlacementPolicy
 subjects:
-- name: image-compliance-rules # refer to the compliance rules
+- name: mcm-compliance-image-policy # refer to the compliance rules
   apiGroup: mcm.ibm.com
   kind: Compliance
 EOF
 ```
+
+```yaml
+cat <<EOF | kubectl apply -f -
+apiVersion: compliance.mcm.ibm.com/v1alpha1
+kind: Compliance
+metadata:
+  name: mcm-compliance-image-policy
+  namespace: kube-system
+  description: "apply image compliance"
+spec:
+  runtime-rules:
+  - apiVersion: policy.mcm.ibm.com/v1alpha1
+    kind: Policy
+    metadata:
+      name: policy-image
+    spec:
+      remediationAction: enforce # inform or enforce
+      namespaces:
+        exclude:
+          - kube*
+        include:
+          - '*'
+      complianceType: musthave
+      object-templates:
+        - complianceType: musthave
+          objectDefinition:
+            apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
+            kind: ClusterImagePolicy
+            metadata:
+              name: mcm-image-policy
+            spec:
+              repositories:
+               - name: [gcr.io/kubernetes-e2e-test2-images/*, gcr.io/google-samples/*]
+EOF               
+```
+
+
+# Guestbook image policy
+
+```yaml
+cat <<EOF | kubectl apply -f -
+apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
+kind: ClusterImagePolicy
+metadata:
+  name: guestbook
+spec:
+  repositories:
+  - name: 'gcr.io/google-samples/gb-redisslave'
+    policy:
+      va:
+        enabled: false
+  - name: 'gcr.io/kubernetes-e2e-test-images/redis'
+    policy:
+      va:
+        enabled: false
+  - name: 'gcr.io/google-samples/gb-frontend'
+    policy:
+      va:
+        enabled: false
+EOF
+```
+
+```yaml
+cat <<EOF | kubectl apply -f -
+apiVersion: mcm.ibm.com/v1alpha1
+kind: PlacementPolicy
+metadata:
+  name: guestbook-image-placement-policy # name of placement policy
+spec:
+  clusterLabels:
+    matchLabels:
+      environment: Prod # condition for my placements
+---
+apiVersion: mcm.ibm.com/v1alpha1
+kind: PlacementBinding
+metadata:
+  name: guestbook-image-binding
+placementRef:
+  name: guestbook-image-placement-policy # refer to the placement policy name
+  apiGroup: mcm.ibm.com
+  kind: PlacementPolicy
+subjects:
+- name: guestbook-compliance-image-policy # refer to the compliance rules
+  apiGroup: mcm.ibm.com
+  kind: Compliance
+EOF
+
+```
+
+```yaml
+cat <<EOF | kubectl apply -f -
+apiVersion: compliance.mcm.ibm.com/v1alpha1
+kind: Compliance
+metadata:
+  name: guestbook-compliance-image-policy
+  namespace: kube-system
+  description: "apply image compliance"
+spec:
+  runtime-rules:
+  - apiVersion: policy.mcm.ibm.com/v1alpha1
+    kind: Policy
+    metadata:
+      name: policy-image
+    spec:
+      remediationAction: enforce # inform or enforce
+      namespaces:
+        exclude:
+          - kube*
+        include:
+          - '*'
+      complianceType: musthave
+      object-templates:
+        - complianceType: musthave
+          objectDefinition:
+            apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
+            kind: ClusterImagePolicy
+            metadata:
+              name: guestbook
+            spec:
+              repositories:
+                [name: gcr.io/google-samples/gb-redisslave, name: gcr.io/kubernetes-e2e-test-images/redis, name: gcr.io/google-samples/gb-frontend] 
+EOF
+              
+```
+
+
+
+
 
 
 
