@@ -45,6 +45,7 @@ Now that we understand the criteria of the use case above, we can start explaini
 A Template defines a list of `policyRules` that determine whether a particular Kubernetes Resource is compliant or not. These rules are basically a list of attributes that the given Kubernetes Resource must and/or must not have in order to be compliant.
 
 To better understand a `Template`, let's look an actual YAML file for a Template of kind `RoleTemplate`:
+
 ```yaml
 apiVersion: roletemplate.mcm.ibm.com/v1alpha1
 kind: RoleTemplate
@@ -97,6 +98,7 @@ Now that we understand what a `Template` is, it will be much easier to explain w
 * Determine what remediation action to take when compliance is not met.
 
 To better understand a `Policy`, let's look an actual YAML file for a Policy object:
+
 ```yaml
 apiVersion: policy.mcm.ibm.com/v1alpha1
 kind: Policy
@@ -151,6 +153,7 @@ We now understand that a `Template` defines the rules to enforce and a `Policy` 
 Luckily, the Compliance Manager can manage this for you with a `Compliance` object. A `Compliance` object takes a list of `Policy` objects (and their respective `Template`s) and determines what clusters to apply them to based on cluster selectors. A `Compliance`, though not apparent by its name alone, is the final piece that ties the policies into the actual infrastructure (clusters) and, therefore, fully implement Compliance.
 
 To better understand a `Compliance`, let's look an actual YAML file for a Compliance object, which contains 2 Policy objects:
+
 ```yaml
 apiVersion: compliance.mcm.ibm.com/v1alpha1
 kind: Compliance
@@ -211,6 +214,7 @@ Now that you understand the functionality of a `Compliance` object, it's time to
   + We will go over Placement Binding in more detail in the next section.
 
 To better understand a `PlacementPolicy`, let's look an actual YAML file for a Placement Policy object:
+
 ```yaml
 apiVersion: mcm.ibm.com/v1alpha1
 kind: PlacementPolicy
@@ -304,6 +308,7 @@ Now that we have installed MCM in both clusters, let's create the **Compliance**
     + This means that even if the cluster was found compliant and, for some reason, a cluster admin deletes the role, the Compliance Manager will recreate it.
 
 Let's proceed with the `Compliance` object creation by running the following commands:
+
 ```bash
 # Login against MCM Hub Cluster
 cloudctl login -a https://${MCM_HUB_CLUSTER_MASTER_IP}:8443 -u ${USERNAME} -p ${PASSWORD} -n mcm --skip-ssl-validation;
