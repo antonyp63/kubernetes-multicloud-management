@@ -268,6 +268,7 @@ Now you are ready to start deploying the MCM Application!
 
 ### 0. Create Image Policies on Both Clusters
 Since ICP version 3.1, you are required to create `Image Policies` that allow you to pull Docker images from specific Docker registries (`gcr.io` in our case). To do so, let's run the following commands on `EACH ICP CLUSTER`:
+
 ```bash
 # Login to the ICP Cluster
 cloudctl login -a https://ICP_MASTER_IP:8443 -n default --skip-ssl-validation
