@@ -22,7 +22,19 @@ spec:
         enabled: false
 EOF
 ```
+```
+apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
+kind: ClusterImagePolicy
+metadata:
+  name: guestbook
+spec:
+  repositories:
+  - name: 'gcr.io/google-samples/*'
+    policy:
+      va:
+        enabled: false
 
+```
 
 
 ```yaml
