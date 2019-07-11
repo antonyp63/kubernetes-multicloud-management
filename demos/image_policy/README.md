@@ -16,12 +16,30 @@ metadata:
   name: mcm-image-policy
 spec:
   repositories:
+  - name: 'docker.io/istio/*'
+    policy:
+      va:
+        enabled: false
+EOF
+```
+
+```yaml
+cat <<EOF | kubectl apply -f -
+apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
+kind: ClusterImagePolicy
+metadata:
+  name: istio-image-policy
+spec:
+  repositories:
   - name: 'gcr.io/google-samples/*'
     policy:
       va:
         enabled: false
 EOF
 ```
+
+
+
 ```
 apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
 kind: ClusterImagePolicy
